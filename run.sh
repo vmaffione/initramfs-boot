@@ -1,13 +1,14 @@
 #!/bin/sh
 
-gcc -static x.c -o x || exit 1
-rm x.o
+IRATI=/home/vmaffione/git/irati/linux
 
-../usr/gen_init_cpio idesc | gzip > initramfs.img
+gcc -static init.c -o init || exit 1
+
+${IRATI}/usr/gen_init_cpio idesc | gzip > initramfs.img
 
 qemu-system-x86_64      --enable-kvm                    \
                         -m 512                          \
-                        -kernel ../arch/x86/boot/bzImage\
+                        -kernel ${IRATI}/arch/x86/boot/bzImage\
                         -initrd initramfs.img           \
                         -nographic                      \
                         -append "console=ttyS0" 
